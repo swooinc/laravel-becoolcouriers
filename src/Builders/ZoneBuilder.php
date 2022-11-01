@@ -19,6 +19,17 @@ class ZoneBuilder extends Builder
     }
 
     /**
+     * Filter the zones that contains the given postcode.
+     *
+     * @param  string  $postcode
+     * @return static
+     */
+    public function forPostcode(string $postcode): static
+    {
+        return $this->withOption('postcode', $postcode);
+    }
+
+    /**
      * Retrieve the list of zones.
      *
      * @return \Illuminate\Support\Collection<int, \SwooInc\BeCool\Zone>
