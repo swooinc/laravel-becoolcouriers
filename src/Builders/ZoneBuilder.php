@@ -5,6 +5,7 @@ namespace SwooInc\BeCool\Builders;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use SwooInc\BeCool\Client;
 use SwooInc\BeCool\Exceptions\ZoneNotFoundException;
 use SwooInc\BeCool\Zone;
@@ -52,10 +53,18 @@ class ZoneBuilder extends Builder
      */
     public function get(): Collection
     {
+        $key = $this->getCacheKey();
+
+        if (Cache::has($key)) {
+            return Cache::get($key);
+        }
+
         $postcode = Arr::get($this->options, 'postcode');
 
         try {
             $response = resolve(Client::class)->get('zones', $this->options);
+
+            $data = $response->json();
         } catch (RequestException $exception) {
             $this->throw(
                 exception: $exception,
@@ -64,12 +73,31 @@ class ZoneBuilder extends Builder
         }
 
         if ($postcode) {
-            return collect([
-                new Zone($response->json()),
+            $zones = collect([
+                new Zone($data),
             ]);
+        } else {
+            $zones = collect($data)->mapInto(Zone::class);
         }
 
-        return collect($response->json())->mapInto(Zone::class);
+        if ($duration = config('becool.cache.zones')) {
+            Cache::put($key, $zones, now()->addSeconds($duration));
+        }
+
+        return $zones;
+    }
+
+    /**
+     * Retrieve the key for caching the response.
+     *
+     * @return string
+     */
+    protected function getCacheKey(): string
+    {
+        return sprintf(
+            'becool-zones-cache-%s',
+            md5(json_encode($this->options))
+        );
     }
 
     /**
