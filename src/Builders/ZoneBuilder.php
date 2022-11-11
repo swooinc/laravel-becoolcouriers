@@ -49,7 +49,7 @@ class ZoneBuilder extends Builder
      *
      * @return \Illuminate\Support\Collection<int, \SwooInc\BeCool\Zone>
      *
-     * @throws \SwooInc\Becool\Exceptions\ZoneNotFoundException
+     * @throws \SwooInc\BeCool\Exceptions\ZoneNotFoundException
      */
     public function get(): Collection
     {
