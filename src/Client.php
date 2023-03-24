@@ -4,6 +4,7 @@ namespace SwooInc\BeCool;
 
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Client
@@ -41,6 +42,16 @@ class Client
     }
 
     /**
+     * Retrieve the full endpoint of the request.
+     *
+     * @return string
+     */
+    public function getEndpoint(string $path): string
+    {
+        return "{$this->base}{$path}";
+    }
+
+    /**
      * Send a request to the given API endpoint.
      *
      * @param  string  $method
@@ -50,10 +61,14 @@ class Client
      */
     public function send(string $method, string $endpoint, array $payload = []): Response
     {
+        $endpoint = $this->getEndpoint($endpoint);
+
+        Log::debug('Endpoint :: '.$endpoint, $payload);
+
         return Http::throw()
             ->withHeaders([
                 'X-Api-Key' => $this->key,
             ])
-            ->{$method}("{$this->base}{$endpoint}", $payload);
+            ->{$method}($endpoint, $payload);
     }
 }
