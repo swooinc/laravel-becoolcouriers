@@ -21,15 +21,21 @@ class Zone extends Fluent
     /**
      * Retrieve the time windows available to the zone.
      *
+     * @param  bool  $all
      * @return \Illuminate\Support\Collection<int, \SwooInc\BeCool\TimeWindow>
      */
-    public function getTimeWindows(): Collection
+    public function getTimeWindows(bool $all = false): Collection
     {
         if ($this->time_windows === null) {
-            $response = resolve(Client::class)->get(sprintf(
-                'zones/%d/timewindows',
-                $this->id
-            ));
+            $response = resolve(Client::class)->get(
+                sprintf(
+                    'zones/%d/timewindows',
+                    $this->id
+                ),
+                [
+                    'show_all' => $all,
+                ]
+            );
 
             $this->time_windows = $response->json();
         }
