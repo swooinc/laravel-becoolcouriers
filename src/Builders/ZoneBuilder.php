@@ -123,6 +123,16 @@ class ZoneBuilder extends Builder
     }
 
     /**
+     * Indicates that the request should include the locations.
+     *
+     * @return static
+     */
+    public function withLocations(): static
+    {
+        return $this->withOption('locations', true);
+    }
+
+    /**
      * Indicates that the request should include the time windows.
      *
      * @return static

@@ -56,6 +56,10 @@ class Zone extends Fluent
             $value = collect($value)->mapInto(TimeWindow::class);
         }
 
+        if ($offset == 'locations' && is_array($value)) {
+            $value = collect($value)->mapInto(Location::class);
+        }
+
         parent::offsetSet($offset, $value);
     }
 
