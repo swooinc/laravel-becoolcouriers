@@ -2,12 +2,32 @@
 
 namespace SwooInc\BeCool;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use SwooInc\BeCool\Builders\ZoneBuilder;
 
 class Zone extends Fluent
 {
+    /**
+     * Create a new subscription instance.
+     *
+     * @param  iterable<TKey, TValue>  $attributes
+     * @return void
+     */
+    public function __construct($attributes = [])
+    {
+        if ($locations = Arr::get($attributes, 'locations')) {
+            Arr::set(
+                $attributes,
+                'locations',
+                Collection::make($locations)->mapInto(Location::class),
+            );
+        }
+
+        parent::__construct($attributes);
+    }
+
     /**
      * Retrieve all the zones.
      *
