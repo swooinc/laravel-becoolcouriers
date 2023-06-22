@@ -17,7 +17,9 @@ class Zone extends Fluent
      */
     public function __construct($attributes = [])
     {
-        if ($locations = Arr::get($attributes, 'locations')) {
+        $locations = Arr::get($attributes, 'locations');
+
+        if (is_array($locations)) {
             Arr::set(
                 $attributes,
                 'locations',
@@ -25,7 +27,9 @@ class Zone extends Fluent
             );
         }
 
-        if ($windows = Arr::get($attributes, 'time_windows')) {
+        $windows = Arr::get($attributes, 'time_windows');
+
+        if (is_array($windows)) {
             Arr::set(
                 $attributes,
                 'time_windows',
