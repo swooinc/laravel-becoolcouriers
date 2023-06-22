@@ -25,6 +25,14 @@ class Zone extends Fluent
             );
         }
 
+        if ($windows = Arr::get($attributes, 'time_windows')) {
+            Arr::set(
+                $attributes,
+                'time_windows',
+                Collection::make($windows)->mapInto(TimeWindow::class)
+            );
+        }
+
         parent::__construct($attributes);
     }
 
