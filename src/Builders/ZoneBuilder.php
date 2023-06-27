@@ -36,9 +36,7 @@ class ZoneBuilder extends Builder
                 's' => $query,
             ]);
 
-            $suggestions = $response->json();
-
-            return $suggestions
+            return collect($response->json())
                 ->unique('zone')
                 ->map(static function ($suggestion) {
                     return Zone::query()->find(Arr::get($suggestion, 'zone'));
