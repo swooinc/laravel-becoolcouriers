@@ -24,6 +24,53 @@ class ZoneBuilder extends Builder
     }
 
     /**
+     * Retrieve the zones that matches the given query.
+     *
+     * @param  string  $query
+     * @return \Illuminate\Support\Collection<int, \SwooInc\BeCool\Zone>
+     */
+    public function autocomplete(string $query): Collection
+    {
+        try {
+            $response = resolve(Client::class)->get('zones/autocomplete', [
+                's' => $query,
+            ]);
+
+            $suggestions = $response->json();
+
+            return $suggestions
+                ->unique('zone')
+                ->map(static function ($suggestion) {
+                    return Zone::query()->find(Arr::get($suggestion, 'zone'));
+                });
+        } catch (RequestException $exception) {
+            $this->throw(
+                exception: $exception,
+            );
+        }
+    }
+
+    /**
+     * Retrieve a zone by it's id.
+     *
+     * @param  int  $id
+     * @return \SwooInc\BeCool\Zone|null
+     */
+    public function find(int $id): ?Zone
+    {
+        try {
+            $response = resolve(Client::class)
+                ->get("zones/{$id}", $this->options);
+
+            return new Zone($response->json());
+        } catch (RequestException $exception) {
+            $this->throw(
+                exception: $exception,
+            );
+        }
+    }
+
+    /**
      * Retrieve the first zone from the response.
      *
      * @return \SwooInc\BeCool\Zone|null
