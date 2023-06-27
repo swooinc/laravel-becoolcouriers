@@ -10,7 +10,7 @@ class Manifest extends Fluent
     /**
      * Upload a manifest via the API.
      *
-     * @param  string  $path
+     * @param  string  $contents
      * @param  int  $region
      * @param  \Illuminate\Support\Carbon  $date
      * @param  int  $window
@@ -19,12 +19,12 @@ class Manifest extends Fluent
      * @param  \Illuminate\Support\Carbon|null  $overwrite
      * @return static
      */
-    public static function upload(string $path, int $region, Carbon $date, int $window, int $service, bool $sitesOnly = false, Carbon $overwrite = null): static
+    public static function upload(string $contents, int $region, Carbon $date, int $window, int $service, bool $sitesOnly = false, Carbon $overwrite = null): static
     {
         $client = resolve(Client::class);
 
         $response = $client
-            ->attach('manifest', file_get_contents($path), 'manifest.csv')
+            ->attach('manifest', $contents, 'manifest.csv')
             ->post($client->getEndpoint('manifests/upload'), [
                 'region' => $region,
                 'date' => $date->format('Y-m-d'),
