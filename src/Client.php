@@ -2,9 +2,9 @@
 
 namespace SwooInc\BeCool;
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Client
@@ -52,6 +52,18 @@ class Client
     }
 
     /**
+     * Create a new pending request.
+     *
+     * @return \Illuminate\Http\Client\PendingRequest
+     */
+    public function newRequest(): PendingRequest
+    {
+        return Http::throw()->withHeaders([
+            'X-Api-Key' => $this->key,
+        ]);
+    }
+
+    /**
      * Send a request to the given API endpoint.
      *
      * @param  string  $method
@@ -63,12 +75,6 @@ class Client
     {
         $endpoint = $this->getEndpoint($endpoint);
 
-        Log::debug('Endpoint :: '.$endpoint, $payload);
-
-        return Http::throw()
-            ->withHeaders([
-                'X-Api-Key' => $this->key,
-            ])
-            ->{$method}($endpoint, $payload);
+        return $this->newRequest()->{$method}($endpoint, $payload);
     }
 }
