@@ -24,6 +24,7 @@ class Manifest extends Fluent
         $client = resolve(Client::class);
 
         $response = $client
+            ->newRequest()
             ->attach('manifest', $contents, 'manifest.csv')
             ->post($client->getEndpoint('manifests/upload'), [
                 'region' => $region,
