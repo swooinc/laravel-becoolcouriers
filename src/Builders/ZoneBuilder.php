@@ -38,8 +38,8 @@ class ZoneBuilder extends Builder
 
             return collect($response->json())
                 ->unique('zone')
-                ->map(static function ($suggestion) {
-                    return Zone::query()->find(Arr::get($suggestion, 'zone'));
+                ->map(function ($suggestion) {
+                    return $this->find(Arr::get($suggestion, 'zone'));
                 });
         } catch (RequestException $exception) {
             $this->throw(
