@@ -45,7 +45,7 @@ class Zone extends Fluent
      *
      * @return \Illuminate\Support\Collection
      */
-    public static function getAll(): Collection
+    public static function get(): Collection
     {
         return ZoneBuilder::make()->get();
     }
