@@ -3,9 +3,8 @@
 namespace SwooInc\BeCool;
 
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Fluent;
 
-class Manifest extends Fluent
+class Manifest extends Base
 {
     /**
      * Upload a manifest via the API.
