@@ -4,10 +4,9 @@ namespace SwooInc\BeCool;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Fluent;
 use SwooInc\BeCool\Builders\ZoneBuilder;
 
-class Zone extends Fluent
+class Zone extends Base
 {
     /**
      * Create a new subscription instance.
